@@ -1,3 +1,14 @@
+/*
+ Appointment.java
+
+ Appointment POJO class
+
+ Author: Joshua Peter Bonzet (221312536)
+
+ Date: 21st June 2026
+*/
+
+
 package za.ac.cput.domain;
 
 import jakarta.persistence.*;
@@ -23,11 +34,11 @@ public class Appointment {
     private ConfirmationStatus confirmationStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_id") // explicitly links doctor_id to the inherited userId variable
+    @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "staff_id") // explicitly links staff_id to the inherited userId variable
+    @JoinColumn(name = "staff_id")
     private ClinicStaff staff;
 
     protected Appointment() {

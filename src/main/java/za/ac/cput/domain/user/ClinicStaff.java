@@ -1,3 +1,13 @@
+/*
+ ClinicStaff.java
+
+ ClinicStaff POJO class
+
+ Author: Matthew Barron (230398863)
+
+ Date: 21st June 2026
+*/
+
 package za.ac.cput.domain.user;
 
 import jakarta.persistence.Entity;
