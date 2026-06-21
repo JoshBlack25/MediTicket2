@@ -1,3 +1,13 @@
+/*
+ Patient.java
+
+ Patient POJO class
+
+ Author: Aidan Barends (230155639)
+
+ Date: 21st June 2026
+*/
+
 package za.ac.cput.domain.user;
 
 import jakarta.persistence.Entity;

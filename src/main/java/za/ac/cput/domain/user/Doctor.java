@@ -1,3 +1,13 @@
+/*
+ Doctor.java
+
+ Doctor POJO class
+
+ Author: Jaden Clayton Abrahams (222206721)
+
+ Date: 21st June 2026
+*/
+
 package za.ac.cput.domain.user;
 
 import jakarta.persistence.Column;
