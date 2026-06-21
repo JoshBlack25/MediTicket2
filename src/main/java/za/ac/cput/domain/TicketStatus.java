@@ -1,3 +1,13 @@
+/*
+ TicketStatus.java
+
+ TicketStatus POJO class
+
+ Author: Joshua Reid Adams (230317693)
+
+ Date: 21st June 2026
+*/
+
 package za.ac.cput.domain;
 
 import jakarta.persistence.*;

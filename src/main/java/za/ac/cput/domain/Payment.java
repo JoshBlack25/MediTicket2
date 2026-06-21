@@ -1,3 +1,13 @@
+/*
+ Payment.java
+
+ Payment POJO class
+
+ Author: Abdullahi Raage Farah (230971091)
+
+ Date: 21st June 2026
+*/
+
 package za.ac.cput.domain;
 
 import jakarta.persistence.*;

@@ -1,3 +1,13 @@
+/*
+ Notification.java
+
+ Notification POJO class
+
+ Author: Raul Jaaim Everts (230270564)
+
+ Date: 21st June 2026
+*/
+
 package za.ac.cput.domain;
 
 import jakarta.persistence.*;
