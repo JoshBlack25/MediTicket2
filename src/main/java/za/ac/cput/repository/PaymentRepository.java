@@ -3,7 +3,7 @@
 
  Repository interface for Payment
 
- Author: Abdullahi Raage Farah (230971091)
+ Author: Abdullahi Farah (230971091)
 
  Date: 5th July 2026
 */
