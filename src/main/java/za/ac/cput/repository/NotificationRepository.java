@@ -14,7 +14,7 @@ List<Notification> findByPatient(Patient patient);
 
 List<Notification> findByNotificationStatus(NotificationStatus notificationStatus);
 
-List<Notification> findByNotificationType(NotificationType notificationtype);
+List<Notification> findByNotificationType(NotificationType notificationType);
 
 
 }
