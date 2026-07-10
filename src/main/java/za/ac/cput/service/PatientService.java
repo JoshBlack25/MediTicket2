@@ -6,6 +6,7 @@ import za.ac.cput.domain.user.Patient;
 import za.ac.cput.repository.PatientRepository;
 import za.ac.cput.service.impl.IPatientService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -47,5 +48,15 @@ public class PatientService implements IPatientService {
     @Override
     public List<Patient> getAll() {
         return patientRepository.findAll();
+    }
+
+    @Override
+    public Patient findByEmail(String email) {
+        return patientRepository.findByEmail(email);
+    }
+
+    @Override
+    public List<Patient> findByDateRegistered(LocalDate dateRegistered) {
+        return patientRepository.findByDateRegistered(dateRegistered);
     }
 }
