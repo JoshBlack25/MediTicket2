@@ -1,4 +1,12 @@
 package za.ac.cput.service.impl;
 
-public interface IDoctorService {
+import za.ac.cput.domain.user.Doctor;
+
+import java.util.Optional;
+
+public interface IDoctorService extends IService <Doctor,Integer> {
+
+    Optional<Doctor> findByEmail(String email);
+
 }
+
