@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface IPatientService extends IService <Patient,Integer > {
 
-
     Patient findByEmail(String email);
 
     List<Patient> findByDateRegistered(LocalDate dateRegistered);

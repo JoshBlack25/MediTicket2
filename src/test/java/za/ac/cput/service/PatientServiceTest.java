@@ -1,116 +1,109 @@
 package za.ac.cput.service;
 
-import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import za.ac.cput.domain.enums.UserStatus;
 import za.ac.cput.domain.user.Patient;
-import za.ac.cput.domain.valueObject.Name;
-import za.ac.cput.factory.PatientFactory;
 import za.ac.cput.repository.PatientRepository;
-
-import java.time.LocalDate;
-import java.util.List;
-
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import za.ac.cput.service.PatientService;
 
 @ExtendWith(MockitoExtension.class)
-@TestMethodOrder(MethodOrderer.MethodName.class)
 class PatientServiceTest {
 
-
+    @Mock
     private PatientRepository patientRepository;
 
-
+    @InjectMocks
     private PatientService patientService;
 
-    private static Patient patient;
+    @Test
+    void create_shouldSaveAndReturnPatient() {
+        Patient patient = mock(Patient.class);
 
-    @BeforeEach
-    void setUp() {
-        Name name = new Name.Builder()
-                .setFirstName("Aidan")
-                .setMiddleName("James")
-                .setLastName("Barends")
-                .build();
+        when(patientRepository.save(patient)).thenReturn(patient);
 
-        patient = PatientFactory.createPatient(
-                1, name, "aidan.barends@email.com", "0812345678",
-                "Aidan123", LocalDate.of(2003, 5, 15),
-                UserStatus.ACTIVE, 101,
-                LocalDate.of(2024, 1, 10), "Jane Barends: 0829876543"
-        );
+        Patient result = patientService.create(patient);
+
+        assertSame(patient, result);
+        verify(patientRepository).save(patient);
     }
 
     @Test
-    void a_Create() {
-        Patient created = patientService.create(patient);
+    void read_shouldReturnPatient() {
+        Patient patient = mock(Patient.class);
 
-        assertNotNull(created);
-        System.out.println("Created: " + created);
+        when(patientRepository.findById(1)).thenReturn(Optional.of(patient));
+
+        assertSame(patient, patientService.read(1));
     }
 
     @Test
-    void b_Read() {
-        Patient read = patientService.read(1);
+    void update_existingPatient_shouldSaveAndReturnUpdatedPatient() {
+        Patient patient = mock(Patient.class);
+        when(patient.getUserId()).thenReturn(1);
 
-        assertNotNull(read);
-        System.out.println("Read: " + read);
+        when(patientRepository.findById(1)).thenReturn(Optional.of(patient));
+        when(patientRepository.save(any(Patient.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        Patient result = patientService.update(patient);
+
+        assertNotNull(result);
+        verify(patientRepository).save(any(Patient.class));
     }
 
     @Test
-    void c_Update() {
-        Patient updated = new Patient.Builder()
-                .copy(patient)
-                .setEmail("aidan@email.com")
-                .build();
+    void update_nonExistingPatient_shouldReturnNull() {
+        Patient patient = mock(Patient.class);
+        when(patient.getUserId()).thenReturn(99);
 
-        Patient result = patientService.update(updated);
+        when(patientRepository.findById(99)).thenReturn(Optional.empty());
 
-        assertNotNull(updated);
-        System.out.println("Updated: " + result);
+        assertNull(patientService.update(patient));
+        verify(patientRepository, never()).save(any());
     }
 
     @Test
-    void d_Delete() {
-
+    void delete_shouldCallRepository() {
         patientService.delete(1);
 
-        verify(patientRepository, times(1)).deleteById(1);
-        System.out.println("Deleted patient with ID: 1");
+        verify(patientRepository).deleteById(1);
     }
 
     @Test
-    void e_GetAll() {
+    void getAll_shouldReturnAllPatients() {
+        List<Patient> patients = List.of(mock(Patient.class));
 
-        List<Patient> patients = patientService.getAll();
+        when(patientRepository.findAll()).thenReturn(patients);
 
-        assertNotNull(patients);
-        assertFalse(patients.isEmpty());
-        System.out.println("All patients: " + patients);
-
+        assertEquals(patients, patientService.getAll());
     }
 
     @Test
-    void f_FindBYyEmail(){
+    void findByEmail_shouldDelegateToRepository() {
+        Patient patient = mock(Patient.class);
 
-        Patient foundEmail = patientService.findByEmail("aidanbarends@email.com");
+        when(patientRepository.findByEmail("a@b.com")).thenReturn(patient);
 
-        assertNotNull(foundEmail);
-        System.out.println("Found by Email: " + foundEmail);
+        assertSame(patient, patientService.findByEmail("a@b.com"));
     }
 
     @Test
-    void g_findByDateRegistered(){
-        List<Patient> found = patientService.findByDateRegistered(LocalDate.of(2024, 1, 10));
+    void findByDateRegistered_shouldDelegateToRepository() {
+        LocalDate date = LocalDate.now();
+        List<Patient> patients = List.of(mock(Patient.class));
 
-        assertNotNull(found);
-        assertFalse(found.isEmpty());
-        System.out.println("Found by date registered: " + found);
+        when(patientRepository.findByDateRegistered(date)).thenReturn(patients);
+
+        assertEquals(patients, patientService.findByDateRegistered(date));
     }
-
 }
