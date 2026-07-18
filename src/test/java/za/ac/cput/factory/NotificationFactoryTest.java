@@ -66,14 +66,8 @@ public class NotificationFactoryTest {
     @Test
     void testCreateNotification_success() {
         Notification n = NotificationFactory.createNotification(
-                1,
-                NotificationType.EMAIL,
-                NotificationStatus.PENDING,
-                "Your appointment is confirmed.",
-                patient,
-                ticket,
-                appointment,
-                notificationDate
+                1, NotificationType.EMAIL, NotificationStatus.PENDING,
+                "Your appointment is confirmed.", patient, ticket, appointment, notificationDate
         );
         assertNotNull(n);
         assertEquals(NotificationType.EMAIL, n.getNotificationType());

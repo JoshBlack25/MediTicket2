@@ -25,8 +25,9 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
-public class NotificationServiceTest{
+public class NotificationServiceTest {
 
     @Mock
     private NotificationRepository notificationRepository;
@@ -41,7 +42,7 @@ public class NotificationServiceTest{
     private LocalDateTime notificationDate;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         Name name = new Name.Builder()
                 .setFirstName("John")
                 .setMiddleName("A")
@@ -155,6 +156,4 @@ public class NotificationServiceTest{
         assertFalse(result.isEmpty());
         verify(notificationRepository, times(1)).findByNotificationStatus(NotificationStatus.PENDING);
     }
-
-
 }
