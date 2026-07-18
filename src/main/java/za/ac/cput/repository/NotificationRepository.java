@@ -10,11 +10,11 @@ import java.util.List;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Integer> {
-    List<Notification> findByPatient(Patient patient);
+List<Notification> findByPatient(Patient patient);
 
-    List<Notification> findByNotificationStatus(NotificationStatus notificationStatus);
+List<Notification> findByNotificationStatus(NotificationStatus notificationStatus);
 
-    List<Notification> findByNotificationType(NotificationType notificationtype);
+List<Notification> findByNotificationType(NotificationType notificationType);
 
 
 }

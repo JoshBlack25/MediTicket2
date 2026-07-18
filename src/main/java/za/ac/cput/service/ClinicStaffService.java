@@ -28,25 +28,25 @@ public class ClinicStaffService implements IClinicStaffService {
         return clinicStaffRepository.findById(id).get();
     }
 
-    @Override
+   @Override
     public ClinicStaff update(ClinicStaff clinicStaff) {
 
         ClinicStaff existing = this.clinicStaffRepository
-                .findById(clinicStaff.getUserId())
-                .orElse(null);
+            .findById(clinicStaff.getUserId())
+            .orElse(null);
 
         if (existing == null) {
-            return null;
-        }
-
-        ClinicStaff updated = new ClinicStaff.Builder()
-                .copy(existing)
-                .setStaffRole(clinicStaff.getStaffRole())
-                .setDepartment(clinicStaff.getDepartment())
-                .build();
-
-        return clinicStaffRepository.save(updated);
+        return null;
     }
+
+    ClinicStaff updated = new ClinicStaff.Builder()
+            .copy(existing)
+            .setStaffRole(clinicStaff.getStaffRole())
+            .setDepartment(clinicStaff.getDepartment())
+            .build();
+
+    return clinicStaffRepository.save(updated);
+}
 
     @Override
     public void delete(Integer id) {
