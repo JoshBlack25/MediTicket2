@@ -3,5 +3,11 @@ package za.ac.cput.domain.enums;
 public enum NotificationStatus {
     SENT,
     FAILED,
-    PENDING
+    PENDING,
+    READ
+
+    //sent = to customer(both sides)
+    //failed = notif hasnt been sent (both sides)
+    //pending = sent but not read/opened (both sides)
+    //read = after notif is opened
 }

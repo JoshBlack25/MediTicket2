@@ -105,6 +105,17 @@ public class NotificationController {
         return ResponseEntity.ok(notificationService.findByPatient(patient));
     }
 
+    @PatchMapping("/read/{id}")
+    public ResponseEntity<Notification> markAsRead(@PathVariable int id) {
+        Notification notification = notificationService.read(id);
+        if (notification == null) return ResponseEntity.notFound().build();
+        Notification updated = new Notification.Builder()
+                .copy(notification)
+                .setNotificationStatus(NotificationStatus.READ)
+                .build();
+        return ResponseEntity.ok(notificationService.update(updated));
+    }
+
     @GetMapping("/doctor/{doctorId}")
     public ResponseEntity<List<Notification>> findByDoctor(@PathVariable int doctorId) {
         Doctor doctor = doctorService.read(doctorId);
