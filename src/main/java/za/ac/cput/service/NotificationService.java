@@ -7,6 +7,8 @@ import za.ac.cput.service.impl.INotificationService;
 import za.ac.cput.domain.Notification;
 import za.ac.cput.domain.enums.NotificationStatus;
 import za.ac.cput.domain.enums.NotificationType;
+import za.ac.cput.domain.user.ClinicStaff;
+import za.ac.cput.domain.user.Doctor;
 import za.ac.cput.domain.user.Patient;
 import java.util.List;
 

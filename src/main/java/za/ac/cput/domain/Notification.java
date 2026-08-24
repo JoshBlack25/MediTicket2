@@ -48,6 +48,8 @@ public class Notification {
         this.notificationDate = builder.notificationDate;
         this.appointment = builder.appointment;
         this.patient = builder.patient;
+        this.doctor = builder.doctor;
+        this.clinicStaff = builder.clinicStaff;
         this.ticket = builder.ticket;
     }
 
@@ -71,6 +73,14 @@ public class Notification {
         return patient;
     }
 
+    public Doctor getDoctor() {
+        return doctor;
+    }
+
+    public ClinicStaff getClinicStaff() {
+        return clinicStaff;
+    }
+
     public PatientTicket getTicket() {
         return ticket;
     }
@@ -83,6 +93,17 @@ public class Notification {
         return notificationDate;
     }
 
+    // Convenience accessor - returns whichever recipient is actually set.
+    // Useful in the service/controller layer when the caller doesn't
+    // care which concrete user type the notification belongs to.
+    @Transient
+    public User getRecipient() {
+        if (patient != null) return patient;
+        if (doctor != null) return doctor;
+        if (clinicStaff != null) return clinicStaff;
+        return null;
+    }
+
     @Override
     public String toString() {
         return "Notification{" +
@@ -91,6 +112,8 @@ public class Notification {
                 ", notificationStatus=" + notificationStatus +
                 ", notificationMessage='" + notificationMessage + '\'' +
                 ", patient=" + patient +
+                ", doctor=" + doctor +
+                ", clinicStaff=" + clinicStaff +
                 ", ticket=" + ticket +
                 ", appointment=" + appointment +
                 ", notificationDate=" + notificationDate +
@@ -147,12 +170,24 @@ public class Notification {
             return this;
         }
 
+        public Builder setDoctor(Doctor doctor) {
+            this.doctor = doctor;
+            return this;
+        }
+
+        public Builder setClinicStaff(ClinicStaff clinicStaff) {
+            this.clinicStaff = clinicStaff;
+            return this;
+        }
+
         public Builder copy(Notification notification) {
             this.notificationId = notification.notificationId;
             this.notificationType = notification.notificationType;
             this.notificationStatus = notification.notificationStatus;
             this.notificationMessage = notification.notificationMessage;
             this.patient = notification.patient;
+            this.doctor = notification.doctor;
+            this.clinicStaff = notification.clinicStaff;
             this.ticket = notification.ticket;
             this.appointment = notification.appointment;
             this.notificationDate = notification.notificationDate;

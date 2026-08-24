@@ -28,7 +28,7 @@ The project follows a layered architecture consisting of:
 
 ## UML Class Diagram
 
-<img width="2091" height="2012" alt="MediTicket2" src="https://github.com/user-attachments/assets/e387ef74-c501-451d-8107-b9c6e61be7b8" />
+
 
 
 ## Technology Stack

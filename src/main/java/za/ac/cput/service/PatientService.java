@@ -8,6 +8,7 @@ import za.ac.cput.service.impl.IPatientService;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PatientService implements IPatientService {
@@ -35,7 +36,19 @@ public class PatientService implements IPatientService {
         if (existing == null) {
             return null;
         }
-        Patient updated = new Patient.Builder().copy(existing).build();
+
+        Patient updated = new Patient.Builder()
+                .copy(existing)
+                .setName(patient.getName())
+                .setEmail(patient.getEmail())
+                .setCellPhone(patient.getCellPhone())
+                .setPassword(patient.getPassword())
+                .setDob(patient.getDob())
+                .setAccountStatus(patient.getAccountStatus())
+                .setDateRegistered(patient.getDateRegistered())
+                .setEmergencyContact(patient.getEmergencyContact())
+                .build();
+
         return this.patientRepository.save(updated);
     }
 
@@ -51,7 +64,7 @@ public class PatientService implements IPatientService {
     }
 
     @Override
-    public Patient findByEmail(String email) {
+    public Optional<Patient> findByEmail(String email) {
         return patientRepository.findByEmail(email);
     }
 

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import za.ac.cput.domain.Appointment;
 import za.ac.cput.domain.enums.ConfirmationStatus;
+import za.ac.cput.domain.enums.StaffRole;
 import za.ac.cput.domain.enums.UserStatus;
 import za.ac.cput.domain.user.ClinicStaff;
 import za.ac.cput.domain.user.Doctor;
@@ -56,7 +57,7 @@ class AppointmentFactoryTest {
                 .setPassword("Staff123")
                 .setDob(LocalDate.of(1990, 8, 20))
                 .setAccountStatus(UserStatus.ACTIVE)
-                .setStaffRole("Receptionist")
+                .setStaffRole(StaffRole.NURSE)
                 .setDepartment("Reception")
                 .build();
 

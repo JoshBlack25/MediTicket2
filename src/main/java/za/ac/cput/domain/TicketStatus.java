@@ -1,15 +1,6 @@
-/*
- TicketStatus.java
-
- TicketStatus POJO class
-
- Author: Joshua Reid Adams (230317693)
-
- Date: 21st June 2026
-*/
-
 package za.ac.cput.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import za.ac.cput.domain.enums.StatusType;
 
@@ -23,14 +14,19 @@ public class TicketStatus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int statusId;
 
-    @Enumerated(EnumType.STRING) // Saves enum text value in database
+    @Enumerated(EnumType.STRING)
     private StatusType statusType;
 
     private LocalDateTime statusDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ticket_id") // Maps the foreign key back to the parent ticket
+    @JoinColumn(name = "ticket_id")
+    @JsonBackReference
     private PatientTicket ticket;
+
+
+    @Column(length = 2000)
+    private String notes;
 
     protected TicketStatus() {
         // Required by JPA
@@ -41,6 +37,7 @@ public class TicketStatus {
         this.statusType = builder.statusType;
         this.statusDate = builder.statusDate;
         this.ticket = builder.ticket;
+        this.notes = builder.notes;
     }
 
     public int getStatusId() {
@@ -59,6 +56,10 @@ public class TicketStatus {
         return ticket;
     }
 
+    public String getNotes() {
+        return notes;
+    }
+
     public boolean isEscalated() {
         return this.statusType == StatusType.ESCALATED;
     }
@@ -69,11 +70,11 @@ public class TicketStatus {
 
     @Override
     public String toString() {
-        // Removed direct ticket tracking string to avoid infinite recursive call stack loops
         return "TicketStatus{" +
                 "statusId=" + statusId +
                 ", statusType=" + statusType +
                 ", statusDate=" + statusDate +
+                ", notes='" + notes + '\'' +
                 '}';
     }
 
@@ -82,6 +83,7 @@ public class TicketStatus {
         private StatusType statusType;
         private LocalDateTime statusDate;
         private PatientTicket ticket;
+        private String notes;
 
         public Builder setStatusId(int statusId) {
             this.statusId = statusId;
@@ -103,11 +105,17 @@ public class TicketStatus {
             return this;
         }
 
+        public Builder setNotes(String notes) {
+            this.notes = notes;
+            return this;
+        }
+
         public Builder copy(TicketStatus status) {
             this.statusId = status.statusId;
             this.statusType = status.statusType;
             this.statusDate = status.statusDate;
             this.ticket = status.ticket;
+            this.notes = status.notes;
             return this;
         }
 

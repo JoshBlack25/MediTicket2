@@ -1,7 +1,7 @@
 package za.ac.cput.service;
 
-import za.ac.cput.domain.enums.NotificationStatus;
-import za.ac.cput.domain.enums.NotificationType;
+import za.ac.cput.domain.enums.*;
+
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,8 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import za.ac.cput.domain.Appointment;
 import za.ac.cput.domain.Notification;
 import za.ac.cput.domain.PatientTicket;
-import za.ac.cput.domain.enums.ConfirmationStatus;
-import za.ac.cput.domain.enums.UserStatus;
+import za.ac.cput.domain.user.ClinicStaff;
+import za.ac.cput.domain.user.Doctor;
 import za.ac.cput.domain.user.Patient;
 import za.ac.cput.domain.valueObject.Name;
 import za.ac.cput.repository.NotificationRepository;
@@ -37,6 +37,8 @@ public class NotificationServiceTest {
 
     private Notification notification;
     private Patient patient;
+    private Doctor doctor;
+    private ClinicStaff clinicStaff;
     private Appointment appointment;
     private PatientTicket ticket;
     private LocalDateTime notificationDate;
@@ -59,6 +61,42 @@ public class NotificationServiceTest {
                 .setAccountStatus(UserStatus.ACTIVE)
                 .setDateRegistered(LocalDate.now())
                 .setEmergencyContact("0829876543")
+                .build();
+
+        Name doctorName = new Name.Builder()
+                .setFirstName("Sarah")
+                .setMiddleName("B")
+                .setLastName("Smith")
+                .build();
+
+        doctor = new Doctor.Builder()
+                .setUserId(2)
+                .setName(doctorName)
+                .setEmail("sarah.smith@mediticket.com")
+                .setCellPhone("0837654321")
+                .setPassword("password456")
+                .setDob(LocalDate.of(1985, 6, 15))
+                .setAccountStatus(UserStatus.ACTIVE)
+                .setSpecialty("Cardiology")
+                .setLicenseNumber("LIC-00123")
+                .build();
+
+        Name staffName = new Name.Builder()
+                .setFirstName("Mike")
+                .setMiddleName("C")
+                .setLastName("Jones")
+                .build();
+
+        clinicStaff = new ClinicStaff.Builder()
+                .setUserId(3)
+                .setName(staffName)
+                .setEmail("mike.jones@mediticket.com")
+                .setCellPhone("0845551234")
+                .setPassword("password789")
+                .setDob(LocalDate.of(1992, 3, 22))
+                .setAccountStatus(UserStatus.ACTIVE)
+                .setStaffRole(StaffRole.NURSE)
+                .setDepartment("Front Desk")
                 .build();
 
         appointment = new Appointment.Builder()
@@ -137,6 +175,38 @@ public class NotificationServiceTest {
         assertNotNull(result);
         assertFalse(result.isEmpty());
         verify(notificationRepository, times(1)).findByPatient(patient);
+    }
+
+    @Test
+    void testFindByDoctor() {
+        Notification doctorNotification = new Notification.Builder()
+                .copy(notification)
+                .setPatient(null)
+                .setDoctor(doctor)
+                .build();
+
+        when(notificationRepository.findByDoctor(doctor)).thenReturn(List.of(doctorNotification));
+        List<Notification> result = notificationService.findByDoctor(doctor);
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+        assertEquals(doctor, result.get(0).getDoctor());
+        verify(notificationRepository, times(1)).findByDoctor(doctor);
+    }
+
+    @Test
+    void testFindByClinicStaff() {
+        Notification staffNotification = new Notification.Builder()
+                .copy(notification)
+                .setPatient(null)
+                .setClinicStaff(clinicStaff)
+                .build();
+
+        when(notificationRepository.findByClinicStaff(clinicStaff)).thenReturn(List.of(staffNotification));
+        List<Notification> result = notificationService.findByClinicStaff(clinicStaff);
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+        assertEquals(clinicStaff, result.get(0).getClinicStaff());
+        verify(notificationRepository, times(1)).findByClinicStaff(clinicStaff);
     }
 
     @Test
