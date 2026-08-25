@@ -1,6 +1,7 @@
 package za.ac.cput.factory;
 
 import org.junit.jupiter.api.Test;
+import za.ac.cput.domain.enums.StaffRole;
 import za.ac.cput.domain.enums.UserStatus;
 import za.ac.cput.domain.user.ClinicStaff;
 import za.ac.cput.domain.valueObject.Name;
@@ -27,13 +28,13 @@ class ClinicStaffFactoryTest {
                 "Password123",
                 LocalDate.of(2005, 1, 1),
                 UserStatus.ACTIVE,
-                "Doctor",
+                StaffRole.ADMIN,
                 "General Practice"
         );
 
         assertNotNull(staff);
         assertEquals(1, staff.getUserId());
-        assertEquals("Doctor", staff.getStaffRole());
+        assertEquals(StaffRole.ADMIN, staff.getStaffRole());
         assertEquals("General Practice", staff.getDepartment());
         assertEquals("matthew@gmail.com", staff.getEmail());
     }
@@ -49,7 +50,7 @@ class ClinicStaffFactoryTest {
                 "Password123",
                 LocalDate.of(2005, 1, 1),
                 UserStatus.ACTIVE,
-                "Doctor",
+                StaffRole.ADMIN,
                 "General Practice"
         );
 
@@ -57,7 +58,7 @@ class ClinicStaffFactoryTest {
     }
 
     @Test
-    void createClinicStaffWithBlankRole() {
+    void createClinicStaffWithNullRole() {
 
         ClinicStaff staff = ClinicStaffFactory.createClinicStaff(
                 1,
@@ -67,7 +68,7 @@ class ClinicStaffFactoryTest {
                 "Password123",
                 LocalDate.of(2005, 1, 1),
                 UserStatus.ACTIVE,
-                "",
+                null,
                 "General Practice"
         );
 
@@ -85,7 +86,7 @@ class ClinicStaffFactoryTest {
                 "Password123",
                 LocalDate.of(2005, 1, 1),
                 UserStatus.ACTIVE,
-                "Doctor",
+                StaffRole.ADMIN,
                 ""
         );
 
@@ -103,7 +104,7 @@ class ClinicStaffFactoryTest {
                 "Password123",
                 LocalDate.of(2005, 1, 1),
                 UserStatus.ACTIVE,
-                "Doctor",
+                StaffRole.ADMIN,
                 "General Practice"
         );
 
@@ -121,7 +122,7 @@ class ClinicStaffFactoryTest {
                 "Password123",
                 LocalDate.of(2005, 1, 1),
                 UserStatus.ACTIVE,
-                "Doctor",
+                StaffRole.ADMIN,
                 "General Practice"
         );
 

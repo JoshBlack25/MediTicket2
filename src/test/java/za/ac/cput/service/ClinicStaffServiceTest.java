@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import za.ac.cput.domain.enums.StaffRole;
 import za.ac.cput.domain.user.ClinicStaff;
 import za.ac.cput.repository.ClinicStaffRepository;
 
@@ -47,20 +48,37 @@ class ClinicStaffServiceTest {
 
         assertNotNull(result);
         assertEquals(clinicStaff, result);
+        verify(clinicStaffRepository).findById(1);
     }
 
     @Test
     void update_shouldUpdateExistingClinicStaff() {
-        ClinicStaff clinicStaff = mock(ClinicStaff.class);
 
-        when(clinicStaff.getUserId()).thenReturn(1);
-        when(clinicStaffRepository.findById(1)).thenReturn(Optional.of(clinicStaff));
+        ClinicStaff inputClinicStaff = new ClinicStaff.Builder()
+                .setUserId(1)
+                .setStaffRole(StaffRole.NURSE)
+                .setDepartment("Cardiology")
+                .build();
+
+        ClinicStaff existingClinicStaff = new ClinicStaff.Builder()
+                .setUserId(1)
+                .setStaffRole(StaffRole.NURSE)
+                .setDepartment("Neurology")
+                .build();
+
+        when(clinicStaffRepository.findById(1))
+                .thenReturn(Optional.of(existingClinicStaff));
+
         when(clinicStaffRepository.save(any(ClinicStaff.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
-        ClinicStaff result = clinicStaffService.update(clinicStaff);
+        ClinicStaff result = clinicStaffService.update(inputClinicStaff);
 
         assertNotNull(result);
+        assertEquals(StaffRole.NURSE, result.getStaffRole());
+        assertEquals("Cardiology", result.getDepartment());
+
+        verify(clinicStaffRepository).findById(1);
         verify(clinicStaffRepository).save(any(ClinicStaff.class));
     }
 
@@ -93,16 +111,33 @@ class ClinicStaffServiceTest {
         List<ClinicStaff> result = clinicStaffService.getAll();
 
         assertEquals(clinicStaffList, result);
+        verify(clinicStaffRepository).findAll();
     }
 
     @Test
     void findByEmail_shouldReturnClinicStaff() {
         ClinicStaff clinicStaff = mock(ClinicStaff.class);
 
-        when(clinicStaffRepository.findByEmail("staff@clinic.com")).thenReturn(clinicStaff);
+        when(clinicStaffRepository.findByEmail("staff@clinic.com"))
+                .thenReturn(Optional.of(clinicStaff));
 
-        ClinicStaff result = clinicStaffService.findByEmail("staff@clinic.com");
+        Optional<ClinicStaff> result = clinicStaffService.findByEmail("staff@clinic.com");
 
-        assertSame(clinicStaff, result);
+        assertTrue(result.isPresent());
+        assertSame(clinicStaff, result.get());
+        verify(clinicStaffRepository).findByEmail("staff@clinic.com");
+    }
+
+    @Test
+    void findByStaffRole_shouldReturnClinicStaffList() {
+        ClinicStaff clinicStaff = mock(ClinicStaff.class);
+
+        when(clinicStaffRepository.findByStaffRole(StaffRole.NURSE))
+                .thenReturn(List.of(clinicStaff));
+
+        List<ClinicStaff> result = clinicStaffService.findByStaffRole(StaffRole.NURSE);
+
+        assertEquals(List.of(clinicStaff), result);
+        verify(clinicStaffRepository).findByStaffRole(StaffRole.NURSE);
     }
 }

@@ -92,9 +92,12 @@ class PatientServiceTest {
     void findByEmail_shouldDelegateToRepository() {
         Patient patient = mock(Patient.class);
 
-        when(patientRepository.findByEmail("a@b.com")).thenReturn(patient);
+        when(patientRepository.findByEmail("a@b.com")).thenReturn(Optional.of(patient));
 
-        assertSame(patient, patientService.findByEmail("a@b.com"));
+        Optional<Patient> result = patientService.findByEmail("a@b.com");
+
+        assertTrue(result.isPresent());
+        assertSame(patient, result.get());
     }
 
     @Test

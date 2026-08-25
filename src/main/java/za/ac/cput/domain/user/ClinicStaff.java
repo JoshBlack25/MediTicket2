@@ -1,18 +1,12 @@
-/*
- ClinicStaff.java
-
- ClinicStaff POJO class
-
- Author: Matthew Barron (230398863)
-
- Date: 21st June 2026
-*/
-
 package za.ac.cput.domain.user;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import za.ac.cput.domain.enums.StaffRole;
 import za.ac.cput.domain.enums.UserStatus;
+import za.ac.cput.domain.enums.UserType;
 import za.ac.cput.domain.valueObject.Name;
 
 import java.time.LocalDate;
@@ -21,7 +15,9 @@ import java.time.LocalDate;
 @Table(name = "clinic_staff")
 public class ClinicStaff extends User {
 
-    private String staffRole;
+    @Enumerated(EnumType.STRING)
+    private StaffRole staffRole;
+
     private String department;
 
     protected ClinicStaff() {
@@ -34,7 +30,7 @@ public class ClinicStaff extends User {
         this.department = builder.department;
     }
 
-    public String getStaffRole() {
+    public StaffRole getStaffRole() {
         return staffRole;
     }
 
@@ -43,19 +39,25 @@ public class ClinicStaff extends User {
     }
 
     @Override
+    public UserType getUserType(){
+        return UserType.CLINIC_STAFF;
+    }
+
+
+    @Override
     public String toString() {
         return "ClinicStaff{" +
                 "userId=" + getUserId() +
-                ", staffRole='" + staffRole + '\'' +
+                ", staffRole=" + staffRole +
                 ", department='" + department + '\'' +
                 "} " + super.toString();
     }
 
     public static class Builder extends User.Builder {
-        private String staffRole;
+        private StaffRole staffRole;
         private String department;
 
-        public Builder setStaffRole(String staffRole) {
+        public Builder setStaffRole(StaffRole staffRole) {
             this.staffRole = staffRole;
             return this;
         }

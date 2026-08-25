@@ -1,5 +1,6 @@
 package za.ac.cput.factory;
 
+import za.ac.cput.domain.enums.StaffRole;
 import za.ac.cput.domain.enums.UserStatus;
 import za.ac.cput.domain.user.ClinicStaff;
 import za.ac.cput.domain.valueObject.Name;
@@ -16,7 +17,7 @@ public class ClinicStaffFactory {
                                                 String password,
                                                 LocalDate dob,
                                                 UserStatus status,
-                                                String staffRole,
+                                                StaffRole staffRole,
                                                 String department) {
 
         if (!Helper.isValidInt(userId)) return null;
@@ -27,7 +28,7 @@ public class ClinicStaffFactory {
         if (!Helper.isValidObject(dob)) return null;
         if (!Helper.isValidObject(status)) return null;
 
-        if (Helper.isNullOrEmpty(staffRole)) return null;
+        if (!Helper.isValidObject(staffRole)) return null;
         if (Helper.isNullOrEmpty(department)) return null;
 
         return new ClinicStaff.Builder()

@@ -14,6 +14,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import za.ac.cput.domain.enums.UserStatus;
+import za.ac.cput.domain.enums.UserType;
 import za.ac.cput.domain.valueObject.Name;
 
 import java.time.LocalDate;
@@ -36,6 +37,12 @@ public class Doctor extends User {
         this.specialty = builder.specialty;
         this.licenseNumber = builder.licenseNumber;
     }
+
+    @Override
+    public UserType getUserType(){
+        return UserType.DOCTOR;
+    }
+
 
     public String getSpecialty() {
         return specialty;

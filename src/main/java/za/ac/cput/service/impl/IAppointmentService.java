@@ -17,4 +17,14 @@ public interface IAppointmentService extends IService<Appointment, Integer> {
     List<Appointment> findByConfirmationStatus(ConfirmationStatus confirmationStatus);
 
     List<Appointment> findByDoctorUserIdAndAppointmentDate(int doctorId, LocalDate appointmentDate);
+
+    List<Appointment> findByPatientUserId(int patientId);
+
+    Appointment approveAppointment(int appointmentId, int doctorId, int staffId);
+
+    Appointment rejectAppointment(int appointmentId, int staffId, String reason);
+
+    // completeAppointment REMOVED — completion is now an automatic side
+    // effect of PatientTicketService.progressStatus(RESOLVED), not a
+    // manually-triggered clinic-staff action.
 }
