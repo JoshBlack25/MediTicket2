@@ -5,7 +5,7 @@
 
  Author: Aidan Barends (230155639)
 
- Date: 24th June 2026
+ Date: 21st June 2026
 */
 
 package za.ac.cput.factory;
@@ -38,31 +38,31 @@ final class PatientFactoryTest {
 
         // Valid patient
         p1 = PatientFactory.createPatient(
-                1, name, "aidan.barends@example.com", "0812345678",
-                "SecurePass123", LocalDate.of(2004, 11, 15),
+                1, name, "aidan.barends@email.com", "0812345678",
+                "Aidan123", LocalDate.of(2003, 5, 15),
                 UserStatus.ACTIVE, 101,
                 LocalDate.of(2024, 1, 10), "Jane Barends: 0829876543"
         );
 
         // Fails - invalid userId (0)
         p2 = PatientFactory.createPatient(
-                0, name, "aidan.barends@example.com", "0812345678",
-                "SecurePass123", LocalDate.of(2003, 5, 15),
+                0, name, "aidan.barends@email.com", "0812345678",
+                "Aidan123", LocalDate.of(2003, 5, 15),
                 UserStatus.ACTIVE, 101,
                 LocalDate.of(2024, 1, 10), "Jane Barends: 0829876543"
         );
 
         // Fails - invalid email
         p3 = PatientFactory.createPatient(
-                1, name, "not-a-valid-email", "0812345678",
-                "SecurePass123", LocalDate.of(2003, 5, 15),
+                1, name, "aidan", "0812345678",
+                "Aidan123", LocalDate.of(2003, 5, 15),
                 UserStatus.ACTIVE, 101,
                 LocalDate.of(2024, 1, 10), "Jane Barends: 0829876543"
         );
 
         // Fails - null password
         p4 = PatientFactory.createPatient(
-                1, name, "aidan.barends@example.com", "0812345678",
+                1, name, "aidan.barends@email.com", "0812345678",
                 null, LocalDate.of(2003, 5, 15),
                 UserStatus.ACTIVE, 101,
                 LocalDate.of(2024, 1, 10), "Jane Barends: 0829876543"
@@ -70,8 +70,8 @@ final class PatientFactoryTest {
 
         // Fails - empty emergency contact
         p5 = PatientFactory.createPatient(
-                1, name, "aidan.barends@example.com", "0812345678",
-                "SecurePass123", LocalDate.of(2003, 5, 15),
+                1, name, "aidan.barends@email.com", "0812345678",
+                "Aidan123", LocalDate.of(2003, 5, 15),
                 UserStatus.ACTIVE, 101,
                 LocalDate.of(2024, 1, 10), ""
         );
@@ -86,24 +86,24 @@ final class PatientFactoryTest {
     @Test
     void b_testCreatePatient_InvalidUserId_Fails() {
         assertNull(p2);
-        System.out.println("Patient2(p2) is null - invalid userId: " + p2);
+        System.out.println("p2 is null - invalid userId: " + p2);
     }
 
     @Test
     void c_testCreatePatient_InvalidEmail_Fails() {
         assertNull(p3);
-        System.out.println("Patient3(p3) is null - invalid email: " + p3);
+        System.out.println("p3 is null - invalid email: " + p3);
     }
 
     @Test
     void d_testCreatePatient_NullPassword_Fails() {
         assertNull(p4);
-        System.out.println("Patient4(p4) is null - null password: " + p4);
+        System.out.println("p4 is null - null password: " + p4);
     }
 
     @Test
     void e_testCreatePatient_EmptyEmergencyContact_Fails() {
         assertNull(p5);
-        System.out.println("Patient5(p5) is null - empty emergency contact: " + p5);
+        System.out.println("p5 is null - empty emergency contact: " + p5);
     }
 }
