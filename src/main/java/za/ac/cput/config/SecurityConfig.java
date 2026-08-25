@@ -66,7 +66,8 @@ public class SecurityConfig {
                                 "/api/auth/employee/request-access",
                                 "/api/auth/forgot-password",
                                 "/api/auth/verify-reset-code",
-                                "/api/auth/reset-password"
+                                "/api/auth/reset-password",
+                                "/error"
                         ).permitAll()
 
                         .anyRequest().authenticated()

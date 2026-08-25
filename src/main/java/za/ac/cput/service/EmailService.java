@@ -26,16 +26,14 @@ public class EmailService implements IEmailService {
 
     @Override
     public void sendVerificationEmail(String toEmail, String firstName, String token) {
-        String verificationLink = verificationBaseUrl + "?token=" + token;
-
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
         message.setSubject("Verify your Mediticket account");
         message.setText(
                 "Hi " + firstName + ",\n\n" +
-                        "Thanks for signing up to Mediticket. Please verify your email by clicking the link below:\n\n" +
-                        verificationLink + "\n\n" +
-                        "This link will expire in 24 hours.\n\n" +
+                        "Thanks for signing up to Mediticket. Your verification code is:\n\n" +
+                        token + "\n\n" +
+                        "Enter this code in the app to activate your account. This code will expire in 24 hours.\n\n" +
                         "If you did not create this account, please ignore this email."
         );
 

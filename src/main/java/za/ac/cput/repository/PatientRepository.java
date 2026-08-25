@@ -14,5 +14,5 @@ public interface PatientRepository extends JpaRepository <Patient, Integer> {
     List<Patient> findByDateRegistered(LocalDate dateRegistered);
 
 
-    Optional<Patient> findByEmail(String email);
+    Patient findByEmail(String email);
 }
