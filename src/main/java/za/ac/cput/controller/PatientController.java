@@ -45,7 +45,7 @@ public class PatientController {
 
     @GetMapping("/email/{email}")
     public Patient findByEmail(@PathVariable String email) {
-        return patientService.findByEmail(email);
+        return patientService.findByEmail(email).orElse(null);
     }
 
     @GetMapping("/dateregistered/{date}")

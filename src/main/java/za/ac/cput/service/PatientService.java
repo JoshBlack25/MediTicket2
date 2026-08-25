@@ -121,7 +121,7 @@ public class PatientService implements IPatientService {
 
     @Override
     public Optional<Patient> findByEmail(String email) {
-        return patientRepository.findByEmail(email);
+        return Optional.ofNullable(patientRepository.findByEmail(email));
     }
 
     @Override
