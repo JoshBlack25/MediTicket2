@@ -9,6 +9,11 @@ import za.ac.cput.domain.user.ClinicStaff;
 import za.ac.cput.domain.user.Doctor;
 import za.ac.cput.domain.user.Patient;
 import java.util.List;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.repository.query.Param;
+
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Integer> {
@@ -23,4 +28,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
 
     List<Notification> findByNotificationType(NotificationType notificationType);
 
+
 }
+
+
+

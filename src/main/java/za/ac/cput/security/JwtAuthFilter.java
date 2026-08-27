@@ -18,12 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class JwtAuthFilter extends OncePerRequestFilter{
+public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
     private final JwtService jwtService;
 
-    public JwtAuthFilter(JwtService jwtService){
+    public JwtAuthFilter(JwtService jwtService) {
         this.jwtService = jwtService;
     }
 
@@ -35,9 +35,17 @@ public class JwtAuthFilter extends OncePerRequestFilter{
 
         String authHeader = request.getHeader("Authorization");
 
-        // No token, or not a Bearer token — let it pass through;
-        // SecurityConfig decides whether the endpoint requires auth
+        // TEMPORARY DEBUGGING
+        System.out.println(">>> SECURITY REQUEST: "
+                + request.getMethod() + " "
+                + request.getRequestURI());
+
+        System.out.println(">>> AUTH HEADER PRESENT: "
+                + (authHeader != null));
+
+        // No token, or not a Bearer token
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.out.println(">>> NO BEARER TOKEN");
             filterChain.doFilter(request, response);
             return;
         }
@@ -45,21 +53,36 @@ public class JwtAuthFilter extends OncePerRequestFilter{
         String token = authHeader.substring(7);
 
         if (jwtService.isTokenValid(token)) {
+
+            System.out.println(">>> JWT IS VALID");
+
             int userId = jwtService.extractUserId(token);
             String userType = jwtService.extractUserType(token);
-            String staffRole = jwtService.extractStaffRole(token); // null unless a ClinicStaff token
+            String staffRole = jwtService.extractStaffRole(token);
 
-            // Principal = userId, authorities = userType (e.g. "PATIENT", "DOCTOR",
-            // "CLINIC_STAFF"), plus staffRole ("ADMIN"/"NURSE") on top for clinic staff
             List<GrantedAuthority> authorities = new ArrayList<>();
             authorities.add(new SimpleGrantedAuthority("ROLE_" + userType));
+
             if (staffRole != null) {
                 authorities.add(new SimpleGrantedAuthority("ROLE_" + staffRole));
             }
 
-            var authToken = new UsernamePasswordAuthenticationToken(userId, null, authorities);
+            var authToken = new UsernamePasswordAuthenticationToken(
+                    userId,
+                    null,
+                    authorities
+            );
+
             SecurityContextHolder.getContext().setAuthentication(authToken);
+
+            System.out.println(">>> AUTHENTICATION CREATED: "
+                    + authToken);
+        } else {
+            System.out.println(">>> JWT IS INVALID");
         }
+
+        System.out.println(">>> BEFORE FILTER CHAIN AUTHENTICATION: "
+                + SecurityContextHolder.getContext().getAuthentication());
 
         filterChain.doFilter(request, response);
     }
