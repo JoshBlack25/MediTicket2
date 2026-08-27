@@ -14,7 +14,6 @@ import za.ac.cput.service.PatientService;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -105,14 +104,12 @@ class PatientControllerTest {
 
     @Test
     void f_FindByEmail() {
-        when(patientService.findByEmail("aidan.barends@email.com"))
-                .thenReturn(Optional.of(patient));
+        when(patientService.findByEmail("aidan.barends@email.com")).thenReturn(patient);
 
-        Optional<Patient> foundEmail = patientController.findByEmail("aidan.barends@email.com");
+        Patient foundEmail = patientController.findByEmail("aidan.barends@email.com");
 
-        assertTrue(foundEmail.isPresent());
-        assertEquals(patient, foundEmail.get());
-        System.out.println("Found by Email: " + foundEmail.get());
+        assertNotNull(foundEmail);
+        System.out.println("Found by Email: " + foundEmail);
     }
 
     @Test
