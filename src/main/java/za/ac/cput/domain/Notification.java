@@ -1,7 +1,7 @@
 package za.ac.cput.domain;
 
 import jakarta.persistence.*;
-import za.ac.cput.domain.user.Patient;
+import za.ac.cput.domain.user.*;
 import za.ac.cput.domain.enums.NotificationStatus;
 import za.ac.cput.domain.enums.NotificationType;
 
@@ -28,6 +28,14 @@ public class Notification {
     private Patient patient;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "clinic_staff_id")
+    private ClinicStaff clinicStaff;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_id")
     private PatientTicket ticket;
 
@@ -38,6 +46,7 @@ public class Notification {
     private LocalDateTime notificationDate;
 
     protected Notification() {
+        // Required by JPA
     }
 
     private Notification(Builder builder) {
@@ -93,9 +102,6 @@ public class Notification {
         return notificationDate;
     }
 
-    // Convenience accessor - returns whichever recipient is actually set.
-    // Useful in the service/controller layer when the caller doesn't
-    // care which concrete user type the notification belongs to.
     @Transient
     public User getRecipient() {
         if (patient != null) return patient;
@@ -121,13 +127,19 @@ public class Notification {
     }
 
     public static class Builder {
+
         private int notificationId;
         private NotificationType notificationType;
         private NotificationStatus notificationStatus;
         private String notificationMessage;
+
         private Patient patient;
-        private Appointment appointment;
+        private Doctor doctor;
+        private ClinicStaff clinicStaff;
+
         private PatientTicket ticket;
+        private Appointment appointment;
+
         private LocalDateTime notificationDate;
 
         public Builder setNotificationId(int notificationId) {
@@ -150,21 +162,6 @@ public class Notification {
             return this;
         }
 
-        public Builder setTicket(PatientTicket ticket) {
-            this.ticket = ticket;
-            return this;
-        }
-
-        public Builder setAppointment(Appointment appointment) {
-            this.appointment = appointment;
-            return this;
-        }
-
-        public Builder setNotificationDate(LocalDateTime notificationDate) {
-            this.notificationDate = notificationDate;
-            return this;
-        }
-
         public Builder setPatient(Patient patient) {
             this.patient = patient;
             return this;
@@ -177,6 +174,21 @@ public class Notification {
 
         public Builder setClinicStaff(ClinicStaff clinicStaff) {
             this.clinicStaff = clinicStaff;
+            return this;
+        }
+
+        public Builder setTicket(PatientTicket ticket) {
+            this.ticket = ticket;
+            return this;
+        }
+
+        public Builder setAppointment(Appointment appointment) {
+            this.appointment = appointment;
+            return this;
+        }
+
+        public Builder setNotificationDate(LocalDateTime notificationDate) {
+            this.notificationDate = notificationDate;
             return this;
         }
 
@@ -199,3 +211,4 @@ public class Notification {
         }
     }
 }
+
