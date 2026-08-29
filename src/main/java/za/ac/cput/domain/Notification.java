@@ -1,22 +1,9 @@
-/*
- Notification.java
-
- Notification POJO class
-
- Author: Raul Jaaim Everts (230270564)
-
- Date: 21st June 2026
-*/
-
 package za.ac.cput.domain;
 
 import jakarta.persistence.*;
+import za.ac.cput.domain.user.*;
 import za.ac.cput.domain.enums.NotificationStatus;
 import za.ac.cput.domain.enums.NotificationType;
-import za.ac.cput.domain.user.ClinicStaff;
-import za.ac.cput.domain.user.Doctor;
-import za.ac.cput.domain.user.Patient;
-import za.ac.cput.domain.user.User;
 
 import java.time.LocalDateTime;
 
@@ -28,33 +15,32 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int notificationId;
 
-    @Enumerated(EnumType.STRING) // Saves enum text value in database
+    @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
 
-    @Enumerated(EnumType.STRING) // Saves enum text value in database
+    @Enumerated(EnumType.STRING)
     private NotificationStatus notificationStatus;
 
     private String notificationMessage;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient_id") // Maps patient foreign key
+    @JoinColumn(name = "patient_id")
     private Patient patient;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_id") // Maps doctor foreign key
+    @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clinic_staff_id") // Maps clinic staff foreign key
+    @JoinColumn(name = "clinic_staff_id")
     private ClinicStaff clinicStaff;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ticket_id") // Maps ticket foreign key
+    @JoinColumn(name = "ticket_id")
     private PatientTicket ticket;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "appointment_id") // Maps appointment foreign key
+    @JoinColumn(name = "appointment_id")
     private Appointment appointment;
 
     private LocalDateTime notificationDate;
@@ -116,9 +102,6 @@ public class Notification {
         return notificationDate;
     }
 
-    // Convenience accessor - returns whichever recipient is actually set.
-    // Useful in the service/controller layer when the caller doesn't
-    // care which concrete user type the notification belongs to.
     @Transient
     public User getRecipient() {
         if (patient != null) return patient;
@@ -144,15 +127,19 @@ public class Notification {
     }
 
     public static class Builder {
+
         private int notificationId;
         private NotificationType notificationType;
         private NotificationStatus notificationStatus;
         private String notificationMessage;
+
         private Patient patient;
         private Doctor doctor;
         private ClinicStaff clinicStaff;
+
         private PatientTicket ticket;
         private Appointment appointment;
+
         private LocalDateTime notificationDate;
 
         public Builder setNotificationId(int notificationId) {
@@ -175,21 +162,6 @@ public class Notification {
             return this;
         }
 
-        public Builder setTicket(PatientTicket ticket) {
-            this.ticket = ticket;
-            return this;
-        }
-
-        public Builder setAppointment(Appointment appointment) {
-            this.appointment = appointment;
-            return this;
-        }
-
-        public Builder setNotificationDate(LocalDateTime notificationDate) {
-            this.notificationDate = notificationDate;
-            return this;
-        }
-
         public Builder setPatient(Patient patient) {
             this.patient = patient;
             return this;
@@ -202,6 +174,21 @@ public class Notification {
 
         public Builder setClinicStaff(ClinicStaff clinicStaff) {
             this.clinicStaff = clinicStaff;
+            return this;
+        }
+
+        public Builder setTicket(PatientTicket ticket) {
+            this.ticket = ticket;
+            return this;
+        }
+
+        public Builder setAppointment(Appointment appointment) {
+            this.appointment = appointment;
+            return this;
+        }
+
+        public Builder setNotificationDate(LocalDateTime notificationDate) {
+            this.notificationDate = notificationDate;
             return this;
         }
 
@@ -224,3 +211,4 @@ public class Notification {
         }
     }
 }
+

@@ -21,4 +21,5 @@ public interface INotificationService extends IService<Notification, Integer> {
 
     List<Notification> findByNotificationType(NotificationType notificationType);
 
+
 }

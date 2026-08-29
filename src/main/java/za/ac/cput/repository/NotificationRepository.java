@@ -10,6 +10,7 @@ import za.ac.cput.domain.enums.NotificationType;
 import za.ac.cput.domain.user.ClinicStaff;
 import za.ac.cput.domain.user.Doctor;
 import za.ac.cput.domain.user.Patient;
+
 import java.util.List;
 
 @Repository
@@ -31,5 +32,4 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
     List<Notification> findByAppointmentIn(List<Appointment> appointments);
 
     List<Notification> findByTicketIn(List<PatientTicket> tickets);
-
 }

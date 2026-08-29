@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import za.ac.cput.domain.enums.StatusType;
 import za.ac.cput.domain.user.Patient;
+import za.ac.cput.domain.user.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -133,6 +134,11 @@ public class PatientTicket {
 
         public Builder setTicketId(int ticketId) {
             this.ticketId = ticketId;
+            return this;
+        }
+
+        public Builder setUser(User user) {
+            this.patient = (Patient) user;
             return this;
         }
 
