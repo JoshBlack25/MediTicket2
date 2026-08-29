@@ -3,6 +3,8 @@ package za.ac.cput.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import za.ac.cput.domain.EmployeeAccessRequest;
 import za.ac.cput.domain.VerificationToken;
@@ -30,6 +32,8 @@ import java.util.Optional;
 
 @Service
 public class AuthService implements IAuthService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     private final PatientService patientService;
     private final DoctorService doctorService;
@@ -78,6 +82,10 @@ public class AuthService implements IAuthService {
             return null;
         }
 
+        if (patientService.findByEmail(patient.getEmail()).isPresent()) {
+            return null;
+        }
+
         Patient inactivePatient =
                 new Patient.Builder()
                         .copy(patient)
@@ -102,11 +110,25 @@ public class AuthService implements IAuthService {
                         savedPatient.getUserType()
                 );
 
-        emailService.sendVerificationEmail(
-                savedPatient.getEmail(),
-                savedPatient.getName().getFirstName(),
-                token.getToken()
-        );
+        try {
+            emailService.sendVerificationEmail(
+                    savedPatient.getEmail(),
+                    savedPatient.getName().getFirstName(),
+                    token.getToken()
+            );
+        } catch (Exception e) {
+            // The account and verification token are already saved at this
+            // point — a failed email (bad SMTP creds, network issue, etc.)
+            // shouldn't undo a successful signup. Log it so it's visible,
+            // but don't fail the request.
+            // Also log the real verification link so it can be visited
+            // manually during local dev, since real email delivery isn't
+            // configured yet.
+            logger.warn("Signup succeeded for {} but verification email failed to send: {}",
+                    savedPatient.getEmail(), e.getMessage());
+            logger.warn("Manual verification link (paste into a browser): http://localhost:8080/api/auth/verify?token={}",
+                    token.getToken());
+        }
 
         return savedPatient;
     }

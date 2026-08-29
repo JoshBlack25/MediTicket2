@@ -53,6 +53,15 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
+    public List<Notification> findByDoctor(Doctor doctor){
+        return notificationRepository.findByDoctor(doctor);
+    }
+
+    @Override
+    public List<Notification> findByClinicStaff(ClinicStaff clinicStaff){
+        return notificationRepository.findByClinicStaff(clinicStaff);
+    }
+    @Override
     public List<Notification> findByNotificationType(NotificationType notificationType){
         return notificationRepository.findByNotificationType(notificationType);
     }
@@ -61,5 +70,6 @@ public class NotificationService implements INotificationService {
     public List<Notification> findByNotificationStatus(NotificationStatus notificationStatus){
         return notificationRepository.findByNotificationStatus(notificationStatus);
     }
+
 
 }

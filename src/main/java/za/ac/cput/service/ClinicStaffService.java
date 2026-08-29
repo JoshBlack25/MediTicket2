@@ -43,6 +43,12 @@ public class ClinicStaffService implements IClinicStaffService {
 
         ClinicStaff updated = new ClinicStaff.Builder()
                 .copy(existing)
+                .setName(clinicStaff.getName())
+                .setEmail(clinicStaff.getEmail())
+                .setCellPhone(clinicStaff.getCellPhone())
+                .setPassword(clinicStaff.getPassword())
+                .setDob(clinicStaff.getDob())
+                .setAccountStatus(clinicStaff.getAccountStatus())
                 .setStaffRole(clinicStaff.getStaffRole())
                 .setDepartment(clinicStaff.getDepartment())
                 .build();

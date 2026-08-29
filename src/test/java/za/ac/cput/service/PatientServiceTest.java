@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import za.ac.cput.domain.user.Patient;
 import za.ac.cput.repository.PatientRepository;
-import za.ac.cput.service.PatientService;
 
 @ExtendWith(MockitoExtension.class)
 class PatientServiceTest {
@@ -92,7 +91,7 @@ class PatientServiceTest {
     void findByEmail_shouldDelegateToRepository() {
         Patient patient = mock(Patient.class);
 
-        when(patientRepository.findByEmail("a@b.com")).thenReturn(Optional.of(patient));
+        when(patientRepository.findByEmail1("a@b.com")).thenReturn(Optional.of(patient));
 
         Optional<Patient> result = patientService.findByEmail("a@b.com");
 

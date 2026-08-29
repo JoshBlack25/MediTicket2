@@ -6,8 +6,4 @@ public enum NotificationStatus {
     PENDING,
     READ
 
-    //sent = to customer(both sides)
-    //failed = notif hasnt been sent (both sides)
-    //pending = sent but not read/opened (both sides)
-    //read = after notif is opened
 }
