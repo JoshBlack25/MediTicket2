@@ -1,22 +1,9 @@
-/*
- Notification.java
-
- Notification POJO class
-
- Author: Raul Jaaim Everts (230270564)
-
- Date: 21st June 2026
-*/
-
 package za.ac.cput.domain;
 
 import jakarta.persistence.*;
+import za.ac.cput.domain.user.Patient;
 import za.ac.cput.domain.enums.NotificationStatus;
 import za.ac.cput.domain.enums.NotificationType;
-import za.ac.cput.domain.user.ClinicStaff;
-import za.ac.cput.domain.user.Doctor;
-import za.ac.cput.domain.user.Patient;
-import za.ac.cput.domain.user.User;
 
 import java.time.LocalDateTime;
 
@@ -28,39 +15,29 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int notificationId;
 
-    @Enumerated(EnumType.STRING) // Saves enum text value in database
+    @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
 
-    @Enumerated(EnumType.STRING) // Saves enum text value in database
+    @Enumerated(EnumType.STRING)
     private NotificationStatus notificationStatus;
 
     private String notificationMessage;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient_id") // Maps patient foreign key
+    @JoinColumn(name = "patient_id")
     private Patient patient;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_id") // Maps doctor foreign key
-    private Doctor doctor;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clinic_staff_id") // Maps clinic staff foreign key
-    private ClinicStaff clinicStaff;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ticket_id") // Maps ticket foreign key
+    @JoinColumn(name = "ticket_id")
     private PatientTicket ticket;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "appointment_id") // Maps appointment foreign key
+    @JoinColumn(name = "appointment_id")
     private Appointment appointment;
 
     private LocalDateTime notificationDate;
 
     protected Notification() {
-        // Required by JPA
     }
 
     private Notification(Builder builder) {
@@ -149,10 +126,8 @@ public class Notification {
         private NotificationStatus notificationStatus;
         private String notificationMessage;
         private Patient patient;
-        private Doctor doctor;
-        private ClinicStaff clinicStaff;
-        private PatientTicket ticket;
         private Appointment appointment;
+        private PatientTicket ticket;
         private LocalDateTime notificationDate;
 
         public Builder setNotificationId(int notificationId) {
