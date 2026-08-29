@@ -1,12 +1,12 @@
 package za.ac.cput.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import za.ac.cput.domain.enums.StaffRole;
 import za.ac.cput.domain.user.ClinicStaff;
 import za.ac.cput.service.ClinicStaffService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/clinicstaff")
@@ -14,47 +14,56 @@ public class ClinicStaffController {
 
     private final ClinicStaffService clinicStaffService;
 
+    @Autowired
     public ClinicStaffController(ClinicStaffService clinicStaffService) {
         this.clinicStaffService = clinicStaffService;
     }
 
     @PostMapping("/create")
-    public ClinicStaff create(@RequestBody ClinicStaff clinicStaff) {
-        return clinicStaffService.create(clinicStaff);
+    public ResponseEntity<ClinicStaff> create(@RequestBody ClinicStaff clinicStaff) {
+        ClinicStaff created = clinicStaffService.create(clinicStaff);
+        return ResponseEntity.ok(created);
     }
 
     @GetMapping("/read/{id}")
-    public ClinicStaff read(@PathVariable Integer id) {
-        return clinicStaffService.read(id);
+    public ResponseEntity<ClinicStaff> read(@PathVariable Integer id) {
+        ClinicStaff clinicStaff = clinicStaffService.read(id);
+        return ResponseEntity.ok(clinicStaff);
     }
 
     @PutMapping("/update")
-    public ClinicStaff update(@RequestBody ClinicStaff clinicStaff) {
-        return clinicStaffService.update(clinicStaff);
+    public ResponseEntity<ClinicStaff> update(@RequestBody ClinicStaff clinicStaff) {
+        ClinicStaff updated = clinicStaffService.update(clinicStaff);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable Integer id) {
+    public ResponseEntity<String> delete(@PathVariable Integer id) {
         clinicStaffService.delete(id);
+        return ResponseEntity.ok("Clinic staff deleted successfully.");
     }
 
-    @GetMapping("/getall")
-    public List<ClinicStaff> getAll() {
-        return clinicStaffService.getAll();
+    @GetMapping("/all")
+    public ResponseEntity<List<ClinicStaff>> getAll() {
+        List<ClinicStaff> clinicStaffList = clinicStaffService.getAll();
+        return ResponseEntity.ok(clinicStaffList);
     }
 
     @GetMapping("/email/{email}")
-    public Optional<ClinicStaff> findByEmail(@PathVariable String email) {
-        return clinicStaffService.findByEmail(email);
+    public ResponseEntity<ClinicStaff> findByEmail(@PathVariable String email) {
+        ClinicStaff clinicStaff = clinicStaffService.findByEmail(email);
+        return ResponseEntity.ok(clinicStaff);
     }
 
     @GetMapping("/department/{department}")
-    public List<ClinicStaff> findByDepartment(@PathVariable String department) {
-        return clinicStaffService.findByDepartment(department);
+    public ResponseEntity<List<ClinicStaff>> findByDepartment(@PathVariable String department) {
+        List<ClinicStaff> clinicStaffList = clinicStaffService.findByDepartment(department);
+        return ResponseEntity.ok(clinicStaffList);
     }
 
-    @GetMapping("/staffrole/{staffRole}")
-    public List<ClinicStaff> findByStaffRole(@PathVariable StaffRole staffRole) {
-        return clinicStaffService.findByStaffRole(staffRole);
+    @GetMapping("/role/{staffRole}")
+    public ResponseEntity<List<ClinicStaff>> findByStaffRole(@PathVariable String staffRole) {
+        List<ClinicStaff> clinicStaffList = clinicStaffService.findByStaffRole(staffRole);
+        return ResponseEntity.ok(clinicStaffList);
     }
 }

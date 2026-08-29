@@ -1,155 +1,135 @@
 package za.ac.cput.controller;
 
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import za.ac.cput.domain.enums.StaffRole;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 import za.ac.cput.domain.enums.UserStatus;
 import za.ac.cput.domain.user.ClinicStaff;
 import za.ac.cput.domain.valueObject.Name;
-import za.ac.cput.factory.ClinicStaffFactory;
 import za.ac.cput.service.ClinicStaffService;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
-@TestMethodOrder(MethodOrderer.MethodName.class)
+@WebMvcTest(ClinicStaffController.class)
 class ClinicStaffControllerTest {
 
-    @Mock
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
     private ClinicStaffService clinicStaffService;
 
-    @InjectMocks
-    private ClinicStaffController clinicStaffController;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    private static ClinicStaff clinicStaff;
+    private final Name name = new Name.Builder()
+            .setFirstName("Matthew")
+            .setLastName("Barron")
+            .build();
 
-    @BeforeEach
-    void setUp() {
+    private final ClinicStaff clinicStaff = new ClinicStaff.Builder()
+            .setUserId(1)
+            .setName(name)
+            .setEmail("matthew@gmail.com")
+            .setCellPhone("0821234567")
+            .setPassword("Password123")
+            .setDob(LocalDate.of(2005, 1, 1))
+            .setAccountStatus(UserStatus.ACTIVE)
+            .setStaffRole("Doctor")
+            .setDepartment("General Practice")
+            .build();
 
-        Name name = new Name.Builder()
-                .setFirstName("Matthew")
-                .setMiddleName("John")
-                .setLastName("Barron")
-                .build();
+    @Test
+    void create() throws Exception {
 
-        clinicStaff = ClinicStaffFactory.createClinicStaff(
-                1,
-                name,
-                "matthew.barron@email.com",
-                "0812345678",
-                "Password123",
-                LocalDate.of(2002, 6, 21),
-                UserStatus.ACTIVE,
-                StaffRole.NURSE,
-                "Emergency"
-        );
+        Mockito.when(clinicStaffService.create(any(ClinicStaff.class)))
+                .thenReturn(clinicStaff);
+
+        mockMvc.perform(post("/api/clinicstaff/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(clinicStaff)))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void a_Create() {
+    void read() throws Exception {
 
-        when(clinicStaffService.create(clinicStaff)).thenReturn(clinicStaff);
+        Mockito.when(clinicStaffService.read(1))
+                .thenReturn(clinicStaff);
 
-        ClinicStaff created = clinicStaffController.create(clinicStaff);
-
-        assertNotNull(created);
-        System.out.println("Created: " + created);
+        mockMvc.perform(get("/api/clinicstaff/read/1"))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void b_Read() {
+    void update() throws Exception {
 
-        when(clinicStaffService.read(1)).thenReturn(clinicStaff);
+        Mockito.when(clinicStaffService.update(any(ClinicStaff.class)))
+                .thenReturn(clinicStaff);
 
-        ClinicStaff read = clinicStaffController.read(1);
-
-        assertNotNull(read);
-        System.out.println("Read: " + read);
+        mockMvc.perform(put("/api/clinicstaff/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(clinicStaff)))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void c_Update() {
+    void deleteClinicStaff() throws Exception {
 
-        ClinicStaff updated = new ClinicStaff.Builder()
-                .copy(clinicStaff)
-                .setDepartment("Pediatrics")
-                .build();
-
-        when(clinicStaffService.update(updated)).thenReturn(updated);
-
-        ClinicStaff result = clinicStaffController.update(updated);
-
-        assertNotNull(result);
-        System.out.println("Updated: " + result);
+        mockMvc.perform(delete("/api/clinicstaff/delete/1"))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void d_Delete() {
+    void getAll() throws Exception {
 
-        doNothing().when(clinicStaffService).delete(1);
+        Mockito.when(clinicStaffService.getAll())
+                .thenReturn(Collections.singletonList(clinicStaff));
 
-        clinicStaffController.delete(1);
-
-        verify(clinicStaffService, times(1)).delete(1);
-        System.out.println("Deleted Clinic Staff with ID: 1");
+        mockMvc.perform(get("/api/clinicstaff/all"))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void e_GetAll() {
+    void findByEmail() throws Exception {
 
-        when(clinicStaffService.getAll()).thenReturn(List.of(clinicStaff));
+        Mockito.when(clinicStaffService.findByEmail("matthew@gmail.com"))
+                .thenReturn(clinicStaff);
 
-        List<ClinicStaff> staff = clinicStaffController.getAll();
-
-        assertNotNull(staff);
-        assertFalse(staff.isEmpty());
-        System.out.println("All Clinic Staff: " + staff);
+        mockMvc.perform(get("/api/clinicstaff/email/matthew@gmail.com"))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void f_FindByEmail() {
+    void findByDepartment() throws Exception {
 
-        when(clinicStaffService.findByEmail("matthew.barron@email.com"))
-                .thenReturn(Optional.of(clinicStaff));
+        Mockito.when(clinicStaffService.findByDepartment("General Practice"))
+                .thenReturn(Collections.singletonList(clinicStaff));
 
-        Optional<ClinicStaff> found = clinicStaffController.findByEmail("matthew.barron@email.com");
-
-        assertTrue(found.isPresent());
-        assertEquals(clinicStaff, found.get());
-        System.out.println("Found by Email: " + found.get());
+        mockMvc.perform(get("/api/clinicstaff/department/General Practice"))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void g_FindByDepartment() {
+    void findByStaffRole() throws Exception {
 
-        when(clinicStaffService.findByDepartment("Emergency"))
-                .thenReturn(List.of(clinicStaff));
+        Mockito.when(clinicStaffService.findByStaffRole("Doctor"))
+                .thenReturn(Collections.singletonList(clinicStaff));
 
-        List<ClinicStaff> found = clinicStaffController.findByDepartment("Emergency");
-
-        assertNotNull(found);
-        assertFalse(found.isEmpty());
-        System.out.println("Found by Department: " + found);
-    }
-
-    @Test
-    void h_FindByStaffRole() {
-
-        when(clinicStaffService.findByStaffRole(StaffRole.NURSE))
-                .thenReturn(List.of(clinicStaff));
-
-        List<ClinicStaff> found = clinicStaffController.findByStaffRole(StaffRole.NURSE);
-
-        assertNotNull(found);
-        assertFalse(found.isEmpty());
-        System.out.println("Found by Staff Role: " + found);
+        mockMvc.perform(get("/api/clinicstaff/role/Doctor"))
+                .andExpect(status().isOk());
     }
 }
