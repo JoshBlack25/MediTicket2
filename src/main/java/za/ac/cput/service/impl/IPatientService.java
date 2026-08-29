@@ -4,10 +4,11 @@ import za.ac.cput.domain.user.Patient;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface IPatientService extends IService <Patient,Integer > {
 
-    Patient findByEmail(String email);
+    Optional<Patient> findByEmail(String email);
 
     List<Patient> findByDateRegistered(LocalDate dateRegistered);
 

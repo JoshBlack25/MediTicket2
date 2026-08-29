@@ -2,11 +2,13 @@ package za.ac.cput.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import za.ac.cput.domain.enums.StaffRole;
 import za.ac.cput.domain.user.ClinicStaff;
 import za.ac.cput.repository.ClinicStaffRepository;
 import za.ac.cput.service.impl.IClinicStaffService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClinicStaffService implements IClinicStaffService {
@@ -28,25 +30,25 @@ public class ClinicStaffService implements IClinicStaffService {
         return clinicStaffRepository.findById(id).get();
     }
 
-   @Override
+    @Override
     public ClinicStaff update(ClinicStaff clinicStaff) {
 
         ClinicStaff existing = this.clinicStaffRepository
-            .findById(clinicStaff.getUserId())
-            .orElse(null);
+                .findById(clinicStaff.getUserId())
+                .orElse(null);
 
         if (existing == null) {
-        return null;
+            return null;
+        }
+
+        ClinicStaff updated = new ClinicStaff.Builder()
+                .copy(existing)
+                .setStaffRole(clinicStaff.getStaffRole())
+                .setDepartment(clinicStaff.getDepartment())
+                .build();
+
+        return clinicStaffRepository.save(updated);
     }
-
-    ClinicStaff updated = new ClinicStaff.Builder()
-            .copy(existing)
-            .setStaffRole(clinicStaff.getStaffRole())
-            .setDepartment(clinicStaff.getDepartment())
-            .build();
-
-    return clinicStaffRepository.save(updated);
-}
 
     @Override
     public void delete(Integer id) {
@@ -59,7 +61,7 @@ public class ClinicStaffService implements IClinicStaffService {
     }
 
     @Override
-    public ClinicStaff findByEmail(String email) {
+    public Optional<ClinicStaff> findByEmail(String email) {
         return clinicStaffRepository.findByEmail(email);
     }
 
@@ -69,7 +71,7 @@ public class ClinicStaffService implements IClinicStaffService {
     }
 
     @Override
-    public List<ClinicStaff> findByStaffRole(String staffRole) {
+    public List<ClinicStaff> findByStaffRole(StaffRole staffRole) {
         return clinicStaffRepository.findByStaffRole(staffRole);
     }
 }

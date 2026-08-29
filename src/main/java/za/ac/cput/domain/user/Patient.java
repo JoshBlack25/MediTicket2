@@ -13,6 +13,7 @@ package za.ac.cput.domain.user;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import za.ac.cput.domain.enums.UserStatus;
+import za.ac.cput.domain.enums.UserType;
 import za.ac.cput.domain.valueObject.Name;
 
 import java.time.LocalDate;
@@ -41,6 +42,11 @@ public class Patient extends User {
     public String getEmergencyContact() {
         return emergencyContact;
     }
+
+    public UserType getUserType(){
+        return UserType.PATIENT;
+    }
+
 
     @Override
     public String toString() {

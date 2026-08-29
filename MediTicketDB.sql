@@ -51,7 +51,7 @@ CREATE TABLE appointment (
     appointment_id INT AUTO_INCREMENT PRIMARY KEY,
     appointment_date DATE,
     appointment_time TIME,
-    confirmation_status ENUM('PENDING', 'CONFIRMED', 'CANCELLED', 'RESCHEDULED') NOT NULL,
+    confirmation_status ENUM('PENDING', 'CONFIRMED', 'CANCELLED', 'RESCHEDULED', 'REJECTED', 'COMPLETED') NOT NULL,
     doctor_id INT,
     staff_id INT,
     FOREIGN KEY (doctor_id) REFERENCES doctor(user_id) ON DELETE SET NULL,

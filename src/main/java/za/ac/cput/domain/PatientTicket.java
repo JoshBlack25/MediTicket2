@@ -1,15 +1,6 @@
-/*
- PatientTicket.java
-
- PatientTicket POJO class
-
- Author: Joshua Reid Adams (230317693)
-
- Date: 21st June 2026
-*/
-
 package za.ac.cput.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import za.ac.cput.domain.enums.StatusType;
 import za.ac.cput.domain.user.Patient;
@@ -30,16 +21,25 @@ public class PatientTicket {
     private LocalDateTime ticketCreatedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient_id") // Maps patient foreign key column
+    @JoinColumn(name = "patient_id")
     private Patient patient;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "appointment_id", unique = true) // Maps appointment foreign key column
+    @JoinColumn(name = "appointment_id", unique = true)
     private Appointment appointment;
 
-    // mappedBy points to the 'ticket' field inside the TicketStatus class
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<TicketStatus> statusHistory;
+
+    // NEW — denormalized copy of the latest statusHistory entry's type,
+    // kept in sync exclusively inside addStatus(). Exists purely so
+    // PatientTicketRepository can query "give me all tickets currently
+    // OPEN" as an indexed column lookup instead of a JPQL scan over
+    // statusHistory. statusHistory remains the source of truth for
+    // history/auditing — this field is a read-optimization only.
+    @Enumerated(EnumType.STRING)
+    private StatusType currentStatus;
 
     protected PatientTicket() {
         this.statusHistory = new ArrayList<>();
@@ -52,6 +52,7 @@ public class PatientTicket {
         this.patient = builder.patient;
         this.appointment = builder.appointment;
         this.statusHistory = new ArrayList<>();
+        this.currentStatus = null; // set via addStatus(), never at construction
     }
 
     public int getTicketId() {
@@ -79,15 +80,27 @@ public class PatientTicket {
     }
 
     public void addStatus(StatusType statusType) {
+        addStatus(statusType, null);
+    }
+
+    public void addStatus(StatusType statusType, String notes) {
+        if (this.statusHistory == null) {
+            this.statusHistory = new ArrayList<>();
+        }
+
         TicketStatus status = new TicketStatus.Builder()
                 .setStatusType(statusType)
                 .setStatusDate(LocalDateTime.now())
                 .setTicket(this)
+                .setNotes(notes)
                 .build();
 
         this.statusHistory.add(status);
+        this.currentStatus = statusType;
     }
 
+    // Unchanged in behavior — still derives from statusHistory, so it stays
+    // correct even for any row where currentStatus hasn't been backfilled yet.
     public StatusType getCurrentStatus() {
         if (statusHistory.isEmpty()) {
             return null;
@@ -107,6 +120,7 @@ public class PatientTicket {
                 ", ticketCreatedDate=" + ticketCreatedDate +
                 ", patient=" + patient +
                 ", appointment=" + appointment +
+                ", currentStatus=" + currentStatus +
                 '}';
     }
 

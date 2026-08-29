@@ -33,7 +33,24 @@ public class DoctorService implements IDoctorService {
 
     @Override
     public Doctor update(Doctor doctor) {
-        return doctorRepository.save(doctor);
+        Doctor existing = this.doctorRepository.findById(doctor.getUserId()).orElse(null);
+        if (existing == null) {
+            return null;
+        }
+
+        Doctor updated = new Doctor.Builder()
+                .copy(existing)
+                .setName(doctor.getName())
+                .setEmail(doctor.getEmail())
+                .setCellPhone(doctor.getCellPhone())
+                .setPassword(doctor.getPassword())
+                .setDob(doctor.getDob())
+                .setAccountStatus(doctor.getAccountStatus())
+                .setSpecialty(doctor.getSpecialty())
+                .setLicenseNumber(doctor.getLicenseNumber())
+                .build();
+
+        return this.doctorRepository.save(updated);
     }
 
 

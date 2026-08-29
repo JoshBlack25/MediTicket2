@@ -7,6 +7,8 @@ import za.ac.cput.service.impl.INotificationService;
 import za.ac.cput.domain.Notification;
 import za.ac.cput.domain.enums.NotificationStatus;
 import za.ac.cput.domain.enums.NotificationType;
+import za.ac.cput.domain.user.ClinicStaff;
+import za.ac.cput.domain.user.Doctor;
 import za.ac.cput.domain.user.Patient;
 import java.util.List;
 
@@ -48,6 +50,16 @@ public class NotificationService implements INotificationService {
     @Override
     public  List<Notification> findByPatient(Patient patient){
         return notificationRepository.findByPatient(patient);
+    }
+
+    @Override
+    public List<Notification> findByDoctor(Doctor doctor){
+        return notificationRepository.findByDoctor(doctor);
+    }
+
+    @Override
+    public List<Notification> findByClinicStaff(ClinicStaff clinicStaff){
+        return notificationRepository.findByClinicStaff(clinicStaff);
     }
 
     @Override

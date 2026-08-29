@@ -20,4 +20,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     List<Appointment> findByConfirmationStatus(ConfirmationStatus confirmationStatus);
 
     List<Appointment> findByDoctor_UserIdAndAppointmentDate(int doctorId, LocalDate appointmentDate);
+
+    // NEW
+    List<Appointment> findByPatient_UserId(int patientId);
 }

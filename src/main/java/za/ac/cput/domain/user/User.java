@@ -12,6 +12,7 @@ package za.ac.cput.domain.user;
 
 import jakarta.persistence.*;
 import za.ac.cput.domain.enums.UserStatus;
+import za.ac.cput.domain.enums.UserType;
 import za.ac.cput.domain.valueObject.Name;
 
 import java.time.LocalDate;
@@ -76,6 +77,8 @@ public abstract class User {
     public LocalDate getDob() {
         return dob;
     }
+
+    public abstract UserType getUserType();
 
     public UserStatus getAccountStatus() {
         return accountStatus;

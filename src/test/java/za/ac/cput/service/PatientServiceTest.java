@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import za.ac.cput.domain.user.Patient;
 import za.ac.cput.repository.PatientRepository;
-import za.ac.cput.service.PatientService;
 
 @ExtendWith(MockitoExtension.class)
 class PatientServiceTest {
@@ -94,7 +93,10 @@ class PatientServiceTest {
 
         when(patientRepository.findByEmail("a@b.com")).thenReturn(patient);
 
-        assertSame(patient, patientService.findByEmail("a@b.com"));
+        Optional<Patient> result = patientService.findByEmail("a@b.com");
+
+        assertTrue(result.isPresent());
+        assertSame(patient, result.get());
     }
 
     @Test
