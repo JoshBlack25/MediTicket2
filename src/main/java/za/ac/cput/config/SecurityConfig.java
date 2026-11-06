@@ -17,6 +17,7 @@
 
 package za.ac.cput.config;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -66,6 +67,16 @@ public class SecurityConfig {
                         // Admin only. This has to stay above the /api/auth/** rule because the first match wins.
                         .requestMatchers("/api/auth/employee/invite").hasRole("ADMIN")
                         .requestMatchers("/api/auth/employee/access-requests/**").hasRole("ADMIN")
+
+                        // Role-based access for the domain endpoints
+                        .requestMatchers(HttpMethod.DELETE, "/api/patients/**").hasAnyRole("ADMIN", "NURSE")
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/doctors/create", "/api/clinicstaff/create").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/clinicstaff/getall", "/api/notifications/getall").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/patients/getall", "/api/doctors/getall", "/api/appointment/getAll").hasAnyRole("ADMIN", "NURSE")
+                        .requestMatchers(HttpMethod.POST, "/api/appointment/*/approve", "/api/appointment/*/reject").hasAnyRole("ADMIN", "NURSE")
+                        .requestMatchers(HttpMethod.POST, "/api/patienttickets/create", "/api/payments/create", "/api/notifications/create").hasAnyRole("ADMIN", "NURSE")
+                        .requestMatchers(HttpMethod.PATCH, "/api/patienttickets/*/status").hasAnyRole("DOCTOR", "NURSE", "ADMIN")
 
                         // Public: no account exists yet at this point in each flow
                         .requestMatchers(
